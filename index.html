@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Advanced IoT Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    .value {
+      font-size: 32px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .label {
+      color: #bbbbbb;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Advanced IoT Sensor Dashboard</h1>
+  
+  <div class="grid">
+
+    <!-- Temperature -->
+    <div class="card">
+      <h2>🌡️ Temperature</h2>
+      <div class="value" id="tempValue">-- °C</div>
+      <div class="label">From DHT22</div>
+    </div>
+
+    <!-- Humidity -->
+    <div class="card">
+      <h2>💧 Humidity</h2>
+      <div class="value" id="humidValue">-- %</div>
+      <div class="label">From DHT22</div>
+    </div>
+
+    <!-- PIR Motion Sensor -->
+    <div class="card">
+      <h2>🚶 Motion Detection (PIR)</h2>
+      <div class="value" id="pirStatus">--</div>
+      <div class="label">PIR Sensor</div>
+    </div>
+
+    <!-- Gas Sensor -->
+    <div class="card">
+      <h2>🔥 Gas Level</h2>
+      <div class="value" id="gasValue">--</div>
+      <div class="label">MQ Gas Sensor</div>
+    </div>
+
+    <!-- Ultrasonic Sensor -->
+    <div class="card">
+      <h2>📏 Distance</h2>
+      <div class="value" id="distanceValue">-- cm</div>
+      <div class="label">HC-SR04 Sensor</div>
+    </div>
+
+  </div>
+
+  <script>
+    async function fetchData() {
+      try {
+        let response = await fetch("backend/latest.php");
+        let data = await response.json();
+
+        document.getElementById("tempValue").innerText = data.temperature + " °C";
+        document.getElementById("humidValue").innerText = data.humidity + " %";
+        document.getElementById("pirStatus").innerText = data.pir == 1 ? "Motion Detected" : "No Motion";
+        document.getElementById("gasValue").innerText = data.gas;
+        document.getElementById("distanceValue").innerText = data.distance + " cm";
+
+      } catch (err) {
+        console.log("Error fetching data", err);
+      }
+    }
+
+    setInterval(fetchData, 2000);
+  </script>
+
+</body>
+</html>
